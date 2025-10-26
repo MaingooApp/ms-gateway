@@ -1,0 +1,597 @@
+{
+  "info": {
+    "name": "Maingoo Gateway API",
+    "description": "Collection for Maingoo Gateway microservice endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "1"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "document_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "invoice_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "enterprise_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Check Health",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.accessToken) {",
+                  "        pm.collectionVariables.set('access_token', response.accessToken);",
+                  "    }",
+                  "    if (response.refreshToken) {",
+                  "        pm.collectionVariables.set('refresh_token', response.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@maingoo.com\",\n  \"password\": \"password123\",\n  \"name\": \"John Doe\",\n  \"roleId\": \"<get-from-roles-endpoint>\",\n  \"enterpriseId\": \"enterprise-123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.accessToken) {",
+                  "        pm.collectionVariables.set('access_token', response.accessToken);",
+                  "    }",
+                  "    if (response.refreshToken) {",
+                  "        pm.collectionVariables.set('refresh_token', response.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@maingoo.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.accessToken) {",
+                  "        pm.collectionVariables.set('access_token', response.accessToken);",
+                  "    }",
+                  "    if (response.refreshToken) {",
+                  "        pm.collectionVariables.set('refresh_token', response.refreshToken);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "refresh"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Roles",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "roles"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Document Analysis",
+      "item": [
+        {
+          "name": "Submit Invoice for Analysis",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.id) {",
+                  "        pm.collectionVariables.set('document_id', response.id);",
+                  "        console.log('Document ID saved:', response.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Invoice image (PNG, JPG, WEBP)"
+                },
+                {
+                  "key": "notes",
+                  "value": "Invoice from supplier - will be auto-created in Suppliers service",
+                  "type": "text",
+                  "description": "Optional notes about the invoice"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/analyze/invoice",
+              "host": ["{{base_url}}"],
+              "path": ["api", "analyze", "invoice"]
+            },
+            "description": "Upload an invoice image for AI analysis. The system will:\n1. Extract invoice data (supplier, items, totals)\n2. Automatically create the invoice in Suppliers service\n3. Return a documentId to check status"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Document by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.invoiceId) {",
+                  "        pm.collectionVariables.set('invoice_id', response.invoiceId);",
+                  "        console.log('Invoice ID saved:', response.invoiceId);",
+                  "        console.log('You can now query: GET /api/suppliers/invoices/' + response.invoiceId);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/analyze/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "analyze", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{document_id}}",
+                  "description": "Document ID from upload response"
+                }
+              ]
+            },
+            "description": "Check the analysis status and results.\n\n**Status values:**\n- PENDING: Waiting to process\n- PROCESSING: AI analyzing the invoice\n- DONE: Analysis complete (check extraction + invoiceId fields)\n- FAILED: Error occurred\n\n**Important:** When status is DONE, the response includes `invoiceId` which is the ID of the invoice created in the Suppliers service. Use this ID to query the full invoice at:\nGET /api/suppliers/invoices/{invoiceId}"
+          },
+          "response": []
+        },
+        {
+          "name": "List My Documents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/analyze",
+              "host": ["{{base_url}}"],
+              "path": ["api", "analyze"]
+            },
+            "description": "Get all documents for the authenticated user's enterprise"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Suppliers",
+      "item": [
+        {
+          "name": "Create Supplier",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Proveedor ABC S.A.\",\n  \"email\": \"contacto@proveedorabc.com\",\n  \"phone\": \"+34 912 345 678\",\n  \"address\": \"Calle Principal 123, Madrid, España\",\n  \"taxId\": \"B12345678\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/suppliers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List All Suppliers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/suppliers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Supplier by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "Create Invoice (Manual)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enterpriseId\": \"{{enterprise_id}}\",\n  \"supplierName\": \"Proveedor XYZ S.A.\",\n  \"supplierCifNif\": \"B12345678\",\n  \"invoiceNumber\": \"INV-2025-001\",\n  \"date\": \"2025-10-12T10:00:00.000Z\",\n  \"amount\": 1250.50,\n  \"lines\": [\n    {\n      \"description\": \"Product A\",\n      \"quantity\": 10,\n      \"unitPrice\": 50.00,\n      \"tax\": \"21\"\n    },\n    {\n      \"description\": \"Product B\",\n      \"quantity\": 5,\n      \"unitPrice\": 150.10,\n      \"tax\": \"21\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/invoices",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", "invoices"]
+            },
+            "description": "Manually create an invoice. NOTE: Invoices are normally created automatically when you upload an invoice image to the Document Analysis endpoint."
+          },
+          "response": []
+        },
+        {
+          "name": "List All Invoices (My Enterprise)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/invoices",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", "invoices"]
+            },
+            "description": "Get all invoices for your enterprise. These include:\n- Auto-created invoices from document analysis\n- Manually created invoices\n\nFiltered automatically by your enterpriseId from the JWT token."
+          },
+          "response": []
+        },
+        {
+          "name": "List Invoices by Restaurant (Filter)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/invoices?restaurantId=uuid-restaurant-id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", "invoices"],
+              "query": [
+                {
+                  "key": "restaurantId",
+                  "value": "uuid-restaurant-id",
+                  "description": "Optional filter by specific restaurant"
+                }
+              ]
+            },
+            "description": "Filter invoices by a specific restaurant ID (optional query parameter)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Invoice by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/invoices/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", "invoices", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{invoice_id}}",
+                  "description": "Invoice ID (auto-saved from document analysis)"
+                }
+              ]
+            },
+            "description": "Get a specific invoice by its ID.\n\n**How to use:**\n1. Upload invoice image → Get documentId\n2. Check document status → Get invoiceId (when DONE)\n3. Use this endpoint with the invoiceId to get full invoice details\n\n**Note:** The invoiceId is automatically saved when you check document status."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Enterprises",
+      "item": [
+        {
+          "name": "Create Enterprise",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"RESTAURANT\",\n  \"name\": \"Restaurante El Buen Sabor\",\n  \"cifNif\": \"B12345678\",\n  \"email\": \"contacto@elbuensabor.com\",\n  \"country\": \"España\",\n  \"city\": \"Madrid\",\n  \"address\": \"Calle Mayor 123\",\n  \"postalCode\": \"28013\",\n  \"firstPhonePrefix\": \"+34\",\n  \"firstPhoneNumber\": \"912345678\",\n  \"secondPhonePrefix\": \"+34\",\n  \"secondPhoneNumber\": \"678901234\",\n  \"iban\": \"ES9121000418450200051332\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enterprises",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enterprises"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List Enterprises",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/enterprises",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enterprises"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Enterprise by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/enterprises/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enterprises", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Enterprise",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Restaurante El Buen Sabor - Actualizado\",\n  \"city\": \"Barcelona\",\n  \"postalCode\": \"08001\",\n  \"firstPhoneNumber\": \"932345678\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enterprises/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enterprises", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-here"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Enterprise",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/enterprises/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enterprises", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-here"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
