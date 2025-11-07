@@ -21,12 +21,8 @@ export class SuppliersController {
     return this.suppliersService.listSuppliers();
   }
 
-  @Get(':id')
-  getSupplier(@Param() params: GetSupplierParams) {
-    return this.suppliersService.getSupplierById(params.id);
-  }
-
   // ==================== Invoices ====================
+  // IMPORTANTE: Las rutas específicas deben ir ANTES de las rutas con parámetros
   @Post('invoices')
   createInvoice(@Body() dto: CreateInvoiceDto, @User() user: any) {
     return this.suppliersService.createInvoice(dto, user.enterpriseId);
@@ -40,5 +36,11 @@ export class SuppliersController {
   @Get('invoices/:id')
   getInvoice(@Param() params: GetInvoiceParams) {
     return this.suppliersService.getInvoiceById(params.id);
+  }
+
+  // Esta ruta debe ir al FINAL porque captura cualquier string como :id
+  @Get(':id')
+  getSupplier(@Param() params: GetSupplierParams) {
+    return this.suppliersService.getSupplierById(params.id);
   }
 }
