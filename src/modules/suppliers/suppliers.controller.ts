@@ -28,8 +28,8 @@ export class SuppliersController {
 
   // ==================== Invoices ====================
   @Post('invoices')
-  createInvoice(@Body() dto: CreateInvoiceDto) {
-    return this.suppliersService.createInvoice(dto);
+  createInvoice(@Body() dto: CreateInvoiceDto, @User() user: any) {
+    return this.suppliersService.createInvoice(dto, user.enterpriseId);
   }
 
   @Get('invoices')

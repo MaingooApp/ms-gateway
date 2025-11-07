@@ -7,10 +7,6 @@ export class CreateInvoiceDto {
 
   @IsString()
   @IsNotEmpty()
-  restaurantId!: string;
-
-  @IsString()
-  @IsNotEmpty()
   invoiceNumber!: string;
 
   @IsDateString()

@@ -15,7 +15,7 @@ interface VerifyResponse {
   user: {
     id: string;
     email?: string;
-    role?: 'admin' | 'employee';
+    roleName?: string; // Cambiado de role a roleName que es lo que devuelve auth
     enterpriseId?: string;
   };
   token?: string;
@@ -38,11 +38,11 @@ export class AuthGuard implements CanActivate {
     request.user = {
       userId: response.user.id,
       email: response.user.email,
-      role: response.user.role,
+      role: response.user.roleName, // Mapear roleName a role
       enterpriseId: response.user.enterpriseId,
       claims: {
         userId: response.user.id,
-        role: response.user.role,
+        role: response.user.roleName, // Mapear roleName a role
         enterpriseId: response.user.enterpriseId,
       },
     };

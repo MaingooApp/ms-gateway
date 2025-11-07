@@ -33,8 +33,10 @@ export class SuppliersService {
   }
 
   // Invoices
-  async createInvoice(dto: CreateInvoiceDto) {
-    return firstValueFrom(this.client.send(SuppliersSubjects.createInvoice, dto));
+  async createInvoice(dto: CreateInvoiceDto, enterpriseId: string) {
+    return firstValueFrom(
+      this.client.send(SuppliersSubjects.createInvoice, { ...dto, enterpriseId }),
+    );
   }
 
   async getInvoiceById(id: string) {
