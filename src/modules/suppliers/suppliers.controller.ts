@@ -1,14 +1,9 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 
 import { SuppliersService } from './suppliers.service';
 import { AuthGuard } from 'src/common/guards';
-import {
-  CreateSupplierDto,
-  CreateInvoiceDto,
-  GetSupplierParams,
-  GetInvoiceParams,
-  ListInvoicesQuery,
-} from './dto';
+import { User } from 'src/common/decorators';
+import { CreateSupplierDto, CreateInvoiceDto, GetSupplierParams, GetInvoiceParams } from './dto';
 
 @Controller('suppliers')
 @UseGuards(AuthGuard)
@@ -38,8 +33,8 @@ export class SuppliersController {
   }
 
   @Get('invoices')
-  listInvoices(@Query() query: ListInvoicesQuery) {
-    return this.suppliersService.listInvoices(query.restaurantId);
+  listInvoices(@User() user: any) {
+    return this.suppliersService.listInvoices(user.enterpriseId);
   }
 
   @Get('invoices/:id')

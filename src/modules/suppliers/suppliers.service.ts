@@ -41,7 +41,7 @@ export class SuppliersService {
     return firstValueFrom(this.client.send(SuppliersSubjects.getInvoice, { id }));
   }
 
-  async listInvoices(restaurantId?: string) {
-    return firstValueFrom(this.client.send(SuppliersSubjects.listInvoices, { restaurantId }));
+  async listInvoices(enterpriseId?: string) {
+    return firstValueFrom(this.client.send(SuppliersSubjects.listInvoices, { enterpriseId }));
   }
 }
