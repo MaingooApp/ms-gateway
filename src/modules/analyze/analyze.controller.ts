@@ -6,7 +6,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-  Body
+  Body,
 } from '@nestjs/common';
 import type { Express } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -23,11 +23,17 @@ export class AnalyzeController {
   constructor(private readonly analyzeService: AnalyzeService) {}
 
   @Post('invoice')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        fileSize: 10 * 1024 * 1024,
+      },
+    }),
+  )
   submitInvoice(
     @UploadedFile() file: Express.Multer.File,
     @Body() body: SubmitInvoiceDto,
-    @User() user: CurrentUser
+    @User() user: CurrentUser,
   ) {
     return this.analyzeService.submit(file, body, user);
   }

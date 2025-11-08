@@ -25,6 +25,28 @@ export class AnalyzeService {
       throw new UnprocessableEntityException('File is required');
     }
 
+    const allowedMimeTypes = [
+      'image/jpeg',
+      'image/jpg',
+      'image/png',
+      'image/heic',
+      'image/heif',
+      'application/pdf',
+    ];
+
+    if (!allowedMimeTypes.includes(file.mimetype)) {
+      throw new UnprocessableEntityException(
+        `File type not allowed. Accepted types: ${allowedMimeTypes.join(', ')}`,
+      );
+    }
+
+    const maxSize = 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      throw new UnprocessableEntityException(
+        `File size exceeds the limit of ${maxSize / (1024 * 1024)}MB`,
+      );
+    }
+
     const payload: SubmitPayload = {
       buffer: file.buffer.toString('base64'),
       filename: file.originalname,
