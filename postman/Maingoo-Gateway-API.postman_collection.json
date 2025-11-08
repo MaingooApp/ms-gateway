@@ -481,6 +481,57 @@
             "description": "Get a specific invoice by its ID.\n\n**How to use:**\n1. Upload invoice image → Get documentId\n2. Check document status → Get invoiceId (when DONE)\n3. Use this endpoint with the invoiceId to get full invoice details\n\n**Note:** The invoiceId is automatically saved when you check document status."
           },
           "response": []
+        },
+        {
+          "name": "Get Invoice Document URL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/invoices/:id/document-url?expiresInHours=24",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", "invoices", ":id", "document-url"],
+              "query": [
+                {
+                  "key": "expiresInHours",
+                  "value": "24",
+                  "description": "Hours until the URL expires (default: 24)"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{invoice_id}}",
+                  "description": "Invoice ID"
+                }
+              ]
+            },
+            "description": "Get a temporary URL to download the original invoice document from Azure Blob Storage.\n\n**Response includes:**\n- `url`: Temporary download URL (valid for specified hours)\n- `expiresIn`: Number of hours until URL expires\n- `blobName`: Reference to the file in blob storage\n\n**Use case:** Display or download the original invoice PDF/image uploaded by the user."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Multiple Invoice Document URLs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invoiceIds\": [\n    \"{{invoice_id}}\",\n    \"cm3a2b3c4d5e6f7g8h9i0k\",\n    \"cm3a2b3c4d5e6f7g8h9i0l\"\n  ],\n  \"expiresInHours\": 48\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/invoices/document-urls",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", "invoices", "document-urls"]
+            },
+            "description": "Get temporary URLs for multiple invoice documents at once.\n\n**Use case:** Bulk export of invoices - generate download links for multiple invoices in one request.\n\n**Response:** Array of objects with:\n- `invoiceId`: The invoice ID\n- `blobName`: Reference to the file\n- `url`: Temporary download URL\n- `expiresIn`: Hours until expiration"
+          },
+          "response": []
         }
       ]
     },

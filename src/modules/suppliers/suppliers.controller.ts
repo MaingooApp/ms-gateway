@@ -33,9 +33,12 @@ export class SuppliersController {
     return this.suppliersService.listInvoices(user.enterpriseId);
   }
 
-  @Get('invoices/:id')
-  getInvoice(@Param() params: GetInvoiceParams) {
-    return this.suppliersService.getInvoiceById(params.id);
+  @Post('invoices/document-urls')
+  getMultipleInvoiceDocumentUrls(@Body() body: { invoiceIds: string[]; expiresInHours?: number }) {
+    return this.suppliersService.getMultipleInvoiceDocumentUrls(
+      body.invoiceIds,
+      body.expiresInHours,
+    );
   }
 
   @Get('invoices/:id/document-url')
@@ -47,14 +50,12 @@ export class SuppliersController {
     return this.suppliersService.getInvoiceDocumentUrl(params.id, hours);
   }
 
-  @Post('invoices/document-urls')
-  getMultipleInvoiceDocumentUrls(@Body() body: { invoiceIds: string[]; expiresInHours?: number }) {
-    return this.suppliersService.getMultipleInvoiceDocumentUrls(
-      body.invoiceIds,
-      body.expiresInHours,
-    );
+  @Get('invoices/:id')
+  getInvoice(@Param() params: GetInvoiceParams) {
+    return this.suppliersService.getInvoiceById(params.id);
   }
 
+  // Esta ruta debe ir al FINAL porque captura cualquier string como :id
   @Get(':id')
   getSupplier(@Param() params: GetSupplierParams) {
     return this.suppliersService.getSupplierById(params.id);
