@@ -61,10 +61,8 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: � Install Azure Container Apps extension
-        run: |
-          az extension add -n containerapp --upgrade
-          az provider register --namespace Microsoft.App --wait
+      - name: 📦 Install Azure Container Apps extension
+        run: az extension add -n containerapp --upgrade
 
       - name: 🔑 Ensure ACR credentials on Container App
         run: |
