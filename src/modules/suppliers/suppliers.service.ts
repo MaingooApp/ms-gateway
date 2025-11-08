@@ -13,6 +13,8 @@ const SuppliersSubjects = {
   createInvoice: 'invoices.create',
   getInvoice: 'invoices.getById',
   listInvoices: 'invoices.list',
+  getInvoiceDocumentUrl: 'invoices.getDocumentUrl',
+  getMultipleInvoiceDocumentUrls: 'invoices.getMultipleDocumentUrls',
 } as const;
 
 @Injectable()
@@ -45,5 +47,23 @@ export class SuppliersService {
 
   async listInvoices(enterpriseId?: string) {
     return firstValueFrom(this.client.send(SuppliersSubjects.listInvoices, { enterpriseId }));
+  }
+
+  async getInvoiceDocumentUrl(invoiceId: string, expiresInHours?: number) {
+    return firstValueFrom(
+      this.client.send(SuppliersSubjects.getInvoiceDocumentUrl, {
+        invoiceId,
+        expiresInHours: expiresInHours || 24,
+      }),
+    );
+  }
+
+  async getMultipleInvoiceDocumentUrls(invoiceIds: string[], expiresInHours?: number) {
+    return firstValueFrom(
+      this.client.send(SuppliersSubjects.getMultipleInvoiceDocumentUrls, {
+        invoiceIds,
+        expiresInHours: expiresInHours || 48,
+      }),
+    );
   }
 }

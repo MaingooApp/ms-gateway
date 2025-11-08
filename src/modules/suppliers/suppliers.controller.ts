@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Query } from '@nestjs/common';
 
 import { SuppliersService } from './suppliers.service';
 import { AuthGuard } from 'src/common/guards';
@@ -38,7 +38,23 @@ export class SuppliersController {
     return this.suppliersService.getInvoiceById(params.id);
   }
 
-  // Esta ruta debe ir al FINAL porque captura cualquier string como :id
+  @Get('invoices/:id/document-url')
+  getInvoiceDocumentUrl(
+    @Param() params: GetInvoiceParams,
+    @Query('expiresInHours') expiresInHours?: string,
+  ) {
+    const hours = expiresInHours ? parseInt(expiresInHours, 10) : 24;
+    return this.suppliersService.getInvoiceDocumentUrl(params.id, hours);
+  }
+
+  @Post('invoices/document-urls')
+  getMultipleInvoiceDocumentUrls(@Body() body: { invoiceIds: string[]; expiresInHours?: number }) {
+    return this.suppliersService.getMultipleInvoiceDocumentUrls(
+      body.invoiceIds,
+      body.expiresInHours,
+    );
+  }
+
   @Get(':id')
   getSupplier(@Param() params: GetSupplierParams) {
     return this.suppliersService.getSupplierById(params.id);
