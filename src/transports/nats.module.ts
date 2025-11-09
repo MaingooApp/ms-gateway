@@ -12,7 +12,6 @@ const natsOptions: NatsOptions = {
   transport: Transport.NATS,
   options: {
     servers: envs.natsServers,
-    jetstream: true,
   },
 };
 
