@@ -3,7 +3,7 @@ import {
   ClientsModule,
   Transport,
   type ClientProviderOptions,
-  type NatsOptions
+  type NatsOptions,
 } from '@nestjs/microservices';
 
 import { NATS_SERVICE, envs } from 'src/config';
@@ -11,17 +11,18 @@ import { NATS_SERVICE, envs } from 'src/config';
 const natsOptions: NatsOptions = {
   transport: Transport.NATS,
   options: {
-    servers: envs.natsServers
-  }
+    servers: envs.natsServers,
+    jetstream: true,
+  },
 };
 
 const natsClient: ClientProviderOptions = {
   ...natsOptions,
-  name: NATS_SERVICE
+  name: NATS_SERVICE,
 };
 
 @Module({
   imports: [ClientsModule.register([natsClient])],
-  exports: [ClientsModule]
+  exports: [ClientsModule],
 })
 export class NatsModule {}
