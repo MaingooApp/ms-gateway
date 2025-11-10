@@ -40,7 +40,7 @@ export class AnalyzeService {
       );
     }
 
-    const maxSize = 10 * 1024 * 1024;
+    const maxSize = 20 * 1024 * 1024;
     if (file.size > maxSize) {
       throw new UnprocessableEntityException(
         `File size exceeds the limit of ${maxSize / (1024 * 1024)}MB`,
