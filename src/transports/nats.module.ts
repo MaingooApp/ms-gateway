@@ -12,6 +12,12 @@ const natsOptions: NatsOptions = {
   transport: Transport.NATS,
   options: {
     servers: envs.natsServers,
+    reconnect: true,
+    maxReconnectAttempts: -1,
+    reconnectTimeWait: 2000,
+    timeout: 5000,
+    name: 'ms-analyzer',
+    maxPayload: 20 * 1024 * 1024,
   },
 };
 
