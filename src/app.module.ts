@@ -10,6 +10,7 @@ import { AnalyzeModule } from './modules/analyze/analyze.module';
 import { HealthCheckModule } from './modules/health-check/health-check.module';
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { EnterprisesModule } from './modules/enterprises/enterprises.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EnterprisesModule } from './modules/enterprises/enterprises.module';
     AnalyzeModule,
     SuppliersModule,
     EnterprisesModule,
+    ProductsModule,
     HealthCheckModule,
   ],
   providers: [

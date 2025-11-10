@@ -45,6 +45,21 @@
       "key": "enterprise_id",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "category_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "allergen_id",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
@@ -639,6 +654,425 @@
                 }
               ]
             }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Create Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.id) {",
+                  "        pm.collectionVariables.set('product_id', response.id);",
+                  "        console.log('Product ID saved:', response.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aceite de Oliva Virgen Extra\",\n  \"eanCode\": \"8412345678901\",\n  \"categoryId\": \"{{category_id}}\",\n  \"unit\": \"Litro\",\n  \"allergenIds\": []\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"]
+            },
+            "description": "Create a new product in the catalog. You must provide:\n- name: Product name\n- eanCode: EAN barcode (optional)\n- categoryId: Category UUID (get from categories endpoint)\n- unit: Unit of measure (e.g., Kg, Litro, Unidad)\n- allergenIds: Array of allergen UUIDs (optional)"
+          },
+          "response": []
+        },
+        {
+          "name": "List All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"]
+            },
+            "description": "Get all products in the catalog"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products?search=aceite&categoryId={{category_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "aceite",
+                  "description": "Search by product name or EAN code"
+                },
+                {
+                  "key": "categoryId",
+                  "value": "{{category_id}}",
+                  "description": "Filter by category UUID"
+                }
+              ]
+            },
+            "description": "Search and filter products:\n- search: Search by name or EAN code\n- categoryId: Filter by category"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{product_id}}",
+                  "description": "Product UUID"
+                }
+              ]
+            },
+            "description": "Get a specific product by its ID with full details including category and allergens"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aceite de Oliva Virgen Extra Premium\",\n  \"unit\": \"Botella 1L\",\n  \"allergenIds\": []\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{product_id}}",
+                  "description": "Product UUID"
+                }
+              ]
+            },
+            "description": "Update product details. All fields are optional."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{product_id}}",
+                  "description": "Product UUID"
+                }
+              ]
+            },
+            "description": "Delete a product from the catalog"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Create Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.id) {",
+                  "        pm.collectionVariables.set('category_id', response.id);",
+                  "        console.log('Category ID saved:', response.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aceites y Vinagres\",\n  \"description\": \"Aceites de oliva, girasol, vinagres balsámicos, etc.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "categories"]
+            },
+            "description": "Create a new product category"
+          },
+          "response": []
+        },
+        {
+          "name": "List All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "categories"]
+            },
+            "description": "Get all product categories. Default categories include:\n- Frutas y Verduras\n- Carnes y Embutidos\n- Pescados y Mariscos\n- Lácteos y Huevos\n- Panadería y Bollería\n- Congelados\n- Bebidas\n- Otros"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/categories/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{category_id}}",
+                  "description": "Category UUID"
+                }
+              ]
+            },
+            "description": "Get a specific category by its ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aceites, Vinagres y Condimentos\",\n  \"description\": \"Aceites de oliva, girasol, vinagres balsámicos, especias y condimentos\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/categories/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{category_id}}",
+                  "description": "Category UUID"
+                }
+              ]
+            },
+            "description": "Update category details. All fields are optional."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/categories/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "categories", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{category_id}}",
+                  "description": "Category UUID"
+                }
+              ]
+            },
+            "description": "Delete a category. Note: Cannot delete if products are assigned to this category."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Allergens",
+      "item": [
+        {
+          "name": "Create Allergen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.id) {",
+                  "        pm.collectionVariables.set('allergen_id', response.id);",
+                  "        console.log('Allergen ID saved:', response.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Soja\",\n  \"code\": \"SOYA\",\n  \"description\": \"Contiene soja o derivados de soja\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/allergens",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "allergens"]
+            },
+            "description": "Create a new allergen"
+          },
+          "response": []
+        },
+        {
+          "name": "List All Allergens",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/allergens",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "allergens"]
+            },
+            "description": "Get all allergens. Default allergens include the 14 European allergens:\n- Gluten (GLUTEN)\n- Crustáceos (CRUSTACEANS)\n- Huevos (EGGS)\n- Pescado (FISH)\n- Cacahuetes (PEANUTS)\n- Soja (SOYA)\n- Lácteos (MILK)\n- Frutos de cáscara (NUTS)\n- Apio (CELERY)\n- Mostaza (MUSTARD)\n- Sésamo (SESAME)\n- Dióxido de azufre y sulfitos (SULPHITES)\n- Altramuces (LUPIN)\n- Moluscos (MOLLUSCS)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Allergen by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/allergens/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "allergens", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{allergen_id}}",
+                  "description": "Allergen UUID"
+                }
+              ]
+            },
+            "description": "Get a specific allergen by its ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Allergen",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Contiene soja o derivados de soja. Puede causar reacciones alérgicas graves.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/allergens/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "allergens", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{allergen_id}}",
+                  "description": "Allergen UUID"
+                }
+              ]
+            },
+            "description": "Update allergen details. All fields are optional."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Allergen",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/allergens/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "allergens", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{allergen_id}}",
+                  "description": "Allergen UUID"
+                }
+              ]
+            },
+            "description": "Delete an allergen"
           },
           "response": []
         }

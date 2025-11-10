@@ -64,6 +64,27 @@ See `.env.example` for defaults. Variables are validated with Joi at startup.
 | PATCH  | `/api/enterprises/:id` | Update enterprise       | ✅            |
 | DELETE | `/api/enterprises/:id` | Delete enterprise       | ✅            |
 
+### Products
+
+| Method | Path                           | Description                      | Auth Required |
+| ------ | ------------------------------ | -------------------------------- | ------------- |
+| POST   | `/api/products`                | Create a new product             | ✅            |
+| GET    | `/api/products`                | List all products (with filters) | ✅            |
+| GET    | `/api/products/:id`            | Get product by ID                | ✅            |
+| PUT    | `/api/products/:id`            | Update product                   | ✅            |
+| DELETE | `/api/products/:id`            | Delete product                   | ✅            |
+| POST   | `/api/products/categories`     | Create a new category            | ✅            |
+| GET    | `/api/products/categories`     | List all categories              | ✅            |
+| GET    | `/api/products/categories/:id` | Get category by ID               | ✅            |
+| POST   | `/api/products/allergens`      | Create a new allergen            | ✅            |
+| GET    | `/api/products/allergens`      | List all allergens               | ✅            |
+
+**Query Parameters for GET /api/products:**
+
+- `search` - Search by name, description, or EAN code
+- `categoryId` - Filter by category
+- `allergenId` - Filter by allergen
+
 ### Health Check
 
 | Method | Path      | Description          | Auth Required |
