@@ -3,7 +3,14 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom, timeout } from 'rxjs';
 
 import { NATS_SERVICE, envs } from 'src/config';
-import { CreateProductDto, UpdateProductDto, CreateCategoryDto, CreateAllergenDto } from './dto';
+import {
+  CreateAllergenDto,
+  CreateCategoryDto,
+  CreateProductDto,
+  UpdateAllergenDto,
+  UpdateCategoryDto,
+  UpdateProductDto,
+} from './dto';
 
 enum ProductsSubjects {
   create = 'products.create',
@@ -14,8 +21,13 @@ enum ProductsSubjects {
   createCategory = 'categories.create',
   findAllCategories = 'categories.findAll',
   findOneCategory = 'categories.findOne',
+  updateCategory = 'categories.update',
+  deleteCategory = 'categories.delete',
   createAllergen = 'allergens.create',
   findAllAllergens = 'allergens.findAll',
+  findOneAllergen = 'allergens.findOne',
+  updateAllergen = 'allergens.update',
+  deleteAllergen = 'allergens.delete',
 }
 
 @Injectable()
@@ -56,6 +68,14 @@ export class ProductsService {
     return this.send(ProductsSubjects.findOneCategory, { id });
   }
 
+  updateCategory(id: string, data: UpdateCategoryDto) {
+    return this.send(ProductsSubjects.updateCategory, { id, data });
+  }
+
+  deleteCategory(id: string) {
+    return this.send(ProductsSubjects.deleteCategory, { id });
+  }
+
   // Allergens
   createAllergen(data: CreateAllergenDto) {
     return this.send(ProductsSubjects.createAllergen, data);
@@ -63,6 +83,18 @@ export class ProductsService {
 
   findAllAllergens() {
     return this.send(ProductsSubjects.findAllAllergens, {});
+  }
+
+  findOneAllergen(id: string) {
+    return this.send(ProductsSubjects.findOneAllergen, { id });
+  }
+
+  updateAllergen(id: string, data: UpdateAllergenDto) {
+    return this.send(ProductsSubjects.updateAllergen, { id, data });
+  }
+
+  deleteAllergen(id: string) {
+    return this.send(ProductsSubjects.deleteAllergen, { id });
   }
 
   private async send<T>(subject: string, payload: unknown): Promise<T> {

@@ -1,7 +1,14 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, UseGuards, Patch } from '@nestjs/common';
 
 import { ProductsService } from './products.service';
-import { CreateProductDto, UpdateProductDto, CreateCategoryDto, CreateAllergenDto } from './dto';
+import {
+  CreateProductDto,
+  UpdateProductDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+  CreateAllergenDto,
+  UpdateAllergenDto,
+} from './dto';
 import { AuthGuard } from 'src/common/guards';
 
 @Controller('products')
@@ -24,21 +31,6 @@ export class ProductsController {
     return this.productsService.findAllProducts({ search, categoryId, allergenId });
   }
 
-  @Get(':id')
-  findOneProduct(@Param('id') id: string) {
-    return this.productsService.findOneProduct(id);
-  }
-
-  @Put(':id')
-  updateProduct(@Param('id') id: string, @Body() data: UpdateProductDto) {
-    return this.productsService.updateProduct(id, data);
-  }
-
-  @Delete(':id')
-  deleteProduct(@Param('id') id: string) {
-    return this.productsService.deleteProduct(id);
-  }
-
   // Categories
   @Post('categories')
   createCategory(@Body() data: CreateCategoryDto) {
@@ -55,6 +47,16 @@ export class ProductsController {
     return this.productsService.findOneCategory(id);
   }
 
+  @Patch('categories/:id')
+  updateCategory(@Param('id') id: string, @Body() data: UpdateCategoryDto) {
+    return this.productsService.updateCategory(id, data);
+  }
+
+  @Delete('categories/:id')
+  deleteCategory(@Param('id') id: string) {
+    return this.productsService.deleteCategory(id);
+  }
+
   // Allergens
   @Post('allergens')
   createAllergen(@Body() data: CreateAllergenDto) {
@@ -64,5 +66,35 @@ export class ProductsController {
   @Get('allergens')
   findAllAllergens() {
     return this.productsService.findAllAllergens();
+  }
+
+  @Get('allergens/:id')
+  findOneAllergen(@Param('id') id: string) {
+    return this.productsService.findOneAllergen(id);
+  }
+
+  @Patch('allergens/:id')
+  updateAllergen(@Param('id') id: string, @Body() data: UpdateAllergenDto) {
+    return this.productsService.updateAllergen(id, data);
+  }
+
+  @Delete('allergens/:id')
+  deleteAllergen(@Param('id') id: string) {
+    return this.productsService.deleteAllergen(id);
+  }
+
+  @Get(':id')
+  findOneProduct(@Param('id') id: string) {
+    return this.productsService.findOneProduct(id);
+  }
+
+  @Put(':id')
+  updateProduct(@Param('id') id: string, @Body() data: UpdateProductDto) {
+    return this.productsService.updateProduct(id, data);
+  }
+
+  @Delete(':id')
+  deleteProduct(@Param('id') id: string) {
+    return this.productsService.deleteProduct(id);
   }
 }
