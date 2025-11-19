@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy, RpcException } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { catchError, timeout } from 'rxjs/operators';
+import { timeout } from 'rxjs/operators';
 
 import { NATS_SERVICE, envs } from 'src/config';
 import {
@@ -99,13 +99,8 @@ export class ProductsService {
   }
 
   private async send<T>(subject: string, payload: unknown): Promise<T> {
-    const observable = this.client.send<T>(subject, payload).pipe(
-      timeout(envs.requestTimeoutMs),
-      catchError((error) => {
-        throw new RpcException(error);
-      }),
+    return await firstValueFrom(
+      this.client.send<T>(subject, payload).pipe(timeout(envs.requestTimeoutMs)),
     );
-
-    return await firstValueFrom(observable);
   }
 }
