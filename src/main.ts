@@ -5,6 +5,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
 import { envs } from './config';
+import { RpcToHttpExceptionFilter } from './common';
 
 async function bootstrap() {
   const logger = new Logger('Gateway');
@@ -36,6 +37,8 @@ async function bootstrap() {
     origin: corsOrigins.includes('*') ? true : corsOrigins,
     credentials: true,
   });
+
+  app.useGlobalFilters(new RpcToHttpExceptionFilter());
 
   await app.listen(envs.port);
   logger.log(`Gateway running on port ${envs.port}`);

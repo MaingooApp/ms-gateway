@@ -12,7 +12,7 @@ export class RpcToHttpExceptionFilter implements ExceptionFilter {
     if (typeof rpcError === 'string') {
       return response.status(400).json({
         statusCode: 400,
-        message: rpcError
+        message: rpcError,
       });
     }
 
@@ -25,13 +25,13 @@ export class RpcToHttpExceptionFilter implements ExceptionFilter {
       return response.status(httpStatus).json({
         statusCode: httpStatus,
         message: message ?? 'Request failed',
-        ...rest
+        ...rest,
       });
     }
 
     return response.status(500).json({
       statusCode: 500,
-      message: 'Unexpected RPC error'
+      message: 'Unexpected RPC error',
     });
   }
 }
