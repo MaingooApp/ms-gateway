@@ -11,7 +11,8 @@ interface SubmitPayload {
   buffer: string;
   filename: string;
   mimetype: string;
-  notes?: string;
+  hasDeliveryNotes: boolean;
+  documentType: string;
   enterpriseId?: string;
   uploadedBy: string;
 }
@@ -51,7 +52,8 @@ export class AnalyzeService {
       buffer: file.buffer.toString('base64'),
       filename: file.originalname,
       mimetype: file.mimetype,
-      notes: body.notes,
+      hasDeliveryNotes: body.hasDeliveryNotes,
+      documentType: body.documentType,
       enterpriseId: user.enterpriseId,
       uploadedBy: user.userId,
     };
