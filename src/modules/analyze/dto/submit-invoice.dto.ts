@@ -1,8 +1,11 @@
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsString } from 'class-validator';
 
 export class SubmitInvoiceDto {
-  @IsOptional()
   @IsString()
-  @MaxLength(500)
-  notes?: string;
+  documentType!: string;
+
+  @Transform(({ value }) => value === 'true' || value === true)
+  @IsBoolean()
+  hasDeliveryNotes!: boolean;
 }
