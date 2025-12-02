@@ -14,7 +14,6 @@ export const AnalyzerSubjects = {
   submit: 'analyzer.submit',
   getById: 'analyzer.getById',
   analyzed: 'documents.analyzed',
-  failed: 'documents.analysis.failed',
 } as const;
 
 export const EnterprisesSubjects = {
