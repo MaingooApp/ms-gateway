@@ -1,8 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { catchError, timeout } from 'rxjs/operators';
 
-import { NATS_SERVICE } from 'src/config';
+import { NATS_SERVICE, envs } from 'src/config';
 import type { CreateSupplierDto, CreateInvoiceDto } from './dto';
 
 const SuppliersSubjects = {
@@ -23,47 +24,52 @@ export class SuppliersService {
 
   // Suppliers
   async createSupplier(dto: CreateSupplierDto) {
-    return firstValueFrom(this.client.send(SuppliersSubjects.createSupplier, dto));
+    return this.send(SuppliersSubjects.createSupplier, dto);
   }
 
   async getSupplierById(id: string) {
-    return firstValueFrom(this.client.send(SuppliersSubjects.getSupplier, { id }));
+    return this.send(SuppliersSubjects.getSupplier, { id });
   }
 
   async listSuppliers() {
-    return firstValueFrom(this.client.send(SuppliersSubjects.listSuppliers, {}));
+    return this.send(SuppliersSubjects.listSuppliers, {});
   }
 
   // Invoices
   async createInvoice(dto: CreateInvoiceDto, enterpriseId: string) {
-    return firstValueFrom(
-      this.client.send(SuppliersSubjects.createInvoice, { ...dto, enterpriseId }),
-    );
+    return this.send(SuppliersSubjects.createInvoice, { ...dto, enterpriseId });
   }
 
   async getInvoiceById(id: string) {
-    return firstValueFrom(this.client.send(SuppliersSubjects.getInvoice, { id }));
+    return this.send(SuppliersSubjects.getInvoice, { id });
   }
 
   async listInvoices(enterpriseId?: string) {
-    return firstValueFrom(this.client.send(SuppliersSubjects.listInvoices, { enterpriseId }));
+    return this.send(SuppliersSubjects.listInvoices, { enterpriseId });
   }
 
   async getInvoiceDocumentUrl(invoiceId: string, expiresInHours?: number) {
-    return firstValueFrom(
-      this.client.send(SuppliersSubjects.getInvoiceDocumentUrl, {
-        invoiceId,
-        expiresInHours: expiresInHours || 24,
-      }),
-    );
+    return this.send(SuppliersSubjects.getInvoiceDocumentUrl, {
+      invoiceId,
+      expiresInHours: expiresInHours || 24,
+    });
   }
 
   async getMultipleInvoiceDocumentUrls(invoiceIds: string[], expiresInHours?: number) {
-    return firstValueFrom(
-      this.client.send(SuppliersSubjects.getMultipleInvoiceDocumentUrls, {
-        invoiceIds,
-        expiresInHours: expiresInHours || 48,
+    return this.send(SuppliersSubjects.getMultipleInvoiceDocumentUrls, {
+      invoiceIds,
+      expiresInHours: expiresInHours || 48,
+    });
+  }
+
+  private async send<T>(subject: string, payload: unknown): Promise<T> {
+    const observable = this.client.send<T>(subject, payload).pipe(
+      timeout(envs.requestTimeoutMs),
+      catchError((error) => {
+        throw new RpcException(error);
       }),
     );
+
+    return await firstValueFrom(observable);
   }
 }
