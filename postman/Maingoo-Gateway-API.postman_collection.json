@@ -412,6 +412,27 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Delete Supplier",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "uuid-here",
+                  "description": "Supplier UUID to delete"
+                }
+              ]
+            },
+            "description": "Delete a supplier. Note: Cannot delete if the supplier has associated invoices. You must delete all invoices first."
+          },
+          "response": []
         }
       ]
     },
@@ -545,6 +566,27 @@
               "path": ["api", "suppliers", "invoices", "document-urls"]
             },
             "description": "Get temporary URLs for multiple invoice documents at once.\n\n**Use case:** Bulk export of invoices - generate download links for multiple invoices in one request.\n\n**Response:** Array of objects with:\n- `invoiceId`: The invoice ID\n- `blobName`: Reference to the file\n- `url`: Temporary download URL\n- `expiresIn`: Hours until expiration"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Invoice",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/suppliers/invoices/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suppliers", "invoices", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{invoice_id}}",
+                  "description": "Invoice UUID to delete"
+                }
+              ]
+            },
+            "description": "Delete an invoice and its associated document from Azure Blob Storage.\n\n**Note:** This will permanently remove:\n- The invoice record from the database\n- The original document file from blob storage\n\n**Warning:** This action cannot be undone."
           },
           "response": []
         }
