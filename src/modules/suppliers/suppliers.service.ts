@@ -10,10 +10,12 @@ const SuppliersSubjects = {
   createSupplier: 'suppliers.create',
   getSupplier: 'suppliers.getById',
   listSuppliers: 'suppliers.list',
+  deleteSupplier: 'suppliers.delete',
 
   createInvoice: 'invoices.create',
   getInvoice: 'invoices.getById',
   listInvoices: 'invoices.list',
+  deleteInvoice: 'invoices.delete',
   getInvoiceDocumentUrl: 'invoices.getDocumentUrl',
   getMultipleInvoiceDocumentUrls: 'invoices.getMultipleDocumentUrls',
 } as const;
@@ -35,6 +37,10 @@ export class SuppliersService {
     return this.send(SuppliersSubjects.listSuppliers, {});
   }
 
+  async deleteSupplier(id: string) {
+    return this.send(SuppliersSubjects.deleteSupplier, { id });
+  }
+
   // Invoices
   async createInvoice(dto: CreateInvoiceDto, enterpriseId: string) {
     return this.send(SuppliersSubjects.createInvoice, { ...dto, enterpriseId });
@@ -46,6 +52,10 @@ export class SuppliersService {
 
   async listInvoices(enterpriseId?: string) {
     return this.send(SuppliersSubjects.listInvoices, { enterpriseId });
+  }
+
+  async deleteInvoice(id: string) {
+    return this.send(SuppliersSubjects.deleteInvoice, { id });
   }
 
   async getInvoiceDocumentUrl(invoiceId: string, expiresInHours?: number) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Body, Param, UseGuards, Query } from '@nestjs/common';
 
 import { SuppliersService } from './suppliers.service';
 import { AuthGuard } from 'src/common/guards';
@@ -55,9 +55,19 @@ export class SuppliersController {
     return this.suppliersService.getInvoiceById(params.id);
   }
 
+  @Delete('invoices/:id')
+  deleteInvoice(@Param() params: GetInvoiceParams) {
+    return this.suppliersService.deleteInvoice(params.id);
+  }
+
   // Esta ruta debe ir al FINAL porque captura cualquier string como :id
   @Get(':id')
   getSupplier(@Param() params: GetSupplierParams) {
     return this.suppliersService.getSupplierById(params.id);
+  }
+
+  @Delete(':id')
+  deleteSupplier(@Param() params: GetSupplierParams) {
+    return this.suppliersService.deleteSupplier(params.id);
   }
 }
