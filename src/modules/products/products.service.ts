@@ -36,16 +36,19 @@ export class ProductsService {
   constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
   // Products
-  createProduct(data: CreateProductDto) {
-    return this.send(ProductsSubjects.create, data);
+  createProduct(data: CreateProductDto, enterpriseId: string) {
+    return this.send(ProductsSubjects.create, { ...data, enterpriseId });
   }
 
-  findAllProducts(filters?: { search?: string; categoryId?: string; allergenId?: string }) {
-    return this.send(ProductsSubjects.findAll, filters || {});
+  findAllProducts(
+    enterpriseId: string,
+    filters?: { search?: string; categoryId?: string; allergenId?: string },
+  ) {
+    return this.send(ProductsSubjects.findAll, { ...filters, enterpriseId });
   }
 
-  findOneProduct(id: string) {
-    return this.send(ProductsSubjects.findOne, { id });
+  findOneProduct(id: string, enterpriseId?: string) {
+    return this.send(ProductsSubjects.findOne, { id, enterpriseId });
   }
 
   updateProduct(id: string, data: UpdateProductDto) {
