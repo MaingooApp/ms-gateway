@@ -8,7 +8,7 @@ export enum AuthSubjects {
   verify = 'auth.verify',
   getRoles = 'auth.getRoles',
   userCreated = 'auth.user.created',
-  userupdate = 'auth.user.update',
+  userUpdate = 'auth.user.update',
 }
 
 export enum AnalyzerSubjects {

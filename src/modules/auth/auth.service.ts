@@ -34,7 +34,7 @@ export class AuthService {
   }
 
   updateUser(userId: string, enterpriseId: string, data: UpdateUserDto) {
-    return this.send(AuthSubjects.userupdate, {
+    return this.send(AuthSubjects.userUpdate, {
       userId,
       enterpriseId,
       data,
