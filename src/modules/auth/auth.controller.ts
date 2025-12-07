@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
-import { LoginUserDto, RefreshTokenDto, RegisterUserDto } from './dto';
+import { LoginUserDto, RefreshTokenDto, RegisterUserDto, UpdateUserDto } from './dto';
 import { AuthGuard } from 'src/common/guards';
 import { User } from 'src/common';
 import type { CurrentUser } from 'src/common';
@@ -28,6 +28,12 @@ export class AuthController {
   @Get('roles')
   getRoles() {
     return this.authService.getRoles();
+  }
+
+  @Put('profile')
+  @UseGuards(AuthGuard)
+  updateUser(@User() user: CurrentUser, @Body() body: UpdateUserDto) {
+    return this.authService.updateUser(user.userId, user.enterpriseId, body);
   }
 
   @UseGuards(AuthGuard)

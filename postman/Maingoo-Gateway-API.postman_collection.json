@@ -1,67 +1,11 @@
 {
   "info": {
+    "_postman_id": "3ab9834a-e0ad-4c3b-81cb-5f2d8a5f063a",
     "name": "Maingoo Gateway API",
     "description": "Collection for Maingoo Gateway microservice endpoints",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "1"
+    "_exporter_id": "8656011"
   },
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{access_token}}",
-        "type": "string"
-      }
-    ]
-  },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:3000",
-      "type": "string"
-    },
-    {
-      "key": "access_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "refresh_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "document_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "invoice_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "enterprise_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "product_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "category_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "allergen_id",
-      "value": "",
-      "type": "string"
-    }
-  ],
   "item": [
     {
       "name": "Health Check",
@@ -140,15 +84,17 @@
                 "exec": [
                   "if (pm.response.code === 200 || pm.response.code === 201) {",
                   "    const response = pm.response.json();",
-                  "    if (response.accessToken) {",
-                  "        pm.collectionVariables.set('access_token', response.accessToken);",
+                  "    if (response.tokens.accessToken) {",
+                  "        pm.environment.set('access_token', response.tokens.accessToken);",
                   "    }",
-                  "    if (response.refreshToken) {",
-                  "        pm.collectionVariables.set('refresh_token', response.refreshToken);",
+                  "    if (response.tokens.refreshToken) {",
+                  "        pm.environment.set('refresh_token', response.tokens.refreshToken);",
                   "    }",
                   "}"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -247,6 +193,34 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"12345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "profile"]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -280,15 +254,15 @@
               "formdata": [
                 {
                   "key": "file",
+                  "description": "Invoice image (PNG, JPG, WEBP)",
                   "type": "file",
-                  "src": [],
-                  "description": "Invoice image (PNG, JPG, WEBP)"
+                  "src": []
                 },
                 {
                   "key": "notes",
                   "value": "Invoice from supplier - will be auto-created in Suppliers service",
-                  "type": "text",
-                  "description": "Optional notes about the invoice"
+                  "description": "Optional notes about the invoice",
+                  "type": "text"
                 }
               ]
             },
@@ -1119,6 +1093,63 @@
           "response": []
         }
       ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "document_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "invoice_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "enterprise_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "product_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "category_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "allergen_id",
+      "value": "",
+      "type": "string"
     }
   ]
 }
