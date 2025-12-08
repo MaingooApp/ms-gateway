@@ -25,16 +25,16 @@ export class SuppliersService {
   constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
   // Suppliers
-  async createSupplier(dto: CreateSupplierDto) {
-    return this.send(SuppliersSubjects.createSupplier, dto);
+  async createSupplier(dto: CreateSupplierDto, enterpriseId: string) {
+    return this.send(SuppliersSubjects.createSupplier, { ...dto, enterpriseId });
   }
 
   async getSupplierById(id: string) {
     return this.send(SuppliersSubjects.getSupplier, { id });
   }
 
-  async listSuppliers() {
-    return this.send(SuppliersSubjects.listSuppliers, {});
+  async listSuppliers(enterpriseId: string) {
+    return this.send(SuppliersSubjects.listSuppliers, { enterpriseId });
   }
 
   async deleteSupplier(id: string) {
