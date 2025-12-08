@@ -12,13 +12,13 @@ export class SuppliersController {
 
   // ==================== Suppliers ====================
   @Post()
-  createSupplier(@Body() dto: CreateSupplierDto) {
-    return this.suppliersService.createSupplier(dto);
+  createSupplier(@Body() dto: CreateSupplierDto, @User() user: any) {
+    return this.suppliersService.createSupplier(dto, user.enterpriseId);
   }
 
   @Get()
-  listSuppliers() {
-    return this.suppliersService.listSuppliers();
+  listSuppliers(@User() user: any) {
+    return this.suppliersService.listSuppliers(user.enterpriseId);
   }
 
   // ==================== Invoices ====================
