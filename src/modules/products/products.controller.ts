@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, UseGuards, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  UseGuards,
+  Patch,
+} from '@nestjs/common';
 
 import { ProductsService } from './products.service';
 import {
@@ -10,6 +21,8 @@ import {
   UpdateAllergenDto,
 } from './dto';
 import { AuthGuard } from 'src/common/guards';
+import { User } from 'src/common/decorators';
+import { CurrentUser } from 'src/common';
 
 @Controller('products')
 @UseGuards(AuthGuard)
@@ -18,17 +31,22 @@ export class ProductsController {
 
   // Products
   @Post()
-  createProduct(@Body() data: CreateProductDto) {
-    return this.productsService.createProduct(data);
+  createProduct(@Body() data: CreateProductDto, @User() user: CurrentUser) {
+    return this.productsService.createProduct(data, user.enterpriseId!);
   }
 
   @Get()
   findAllProducts(
+    @User() user: CurrentUser,
     @Query('search') search?: string,
     @Query('categoryId') categoryId?: string,
     @Query('allergenId') allergenId?: string,
   ) {
-    return this.productsService.findAllProducts({ search, categoryId, allergenId });
+    return this.productsService.findAllProducts(user.enterpriseId!, {
+      search,
+      categoryId,
+      allergenId,
+    });
   }
 
   // Categories
@@ -84,8 +102,8 @@ export class ProductsController {
   }
 
   @Get(':id')
-  findOneProduct(@Param('id') id: string) {
-    return this.productsService.findOneProduct(id);
+  findOneProduct(@Param('id') id: string, @User() user: CurrentUser) {
+    return this.productsService.findOneProduct(id, user.enterpriseId);
   }
 
   @Put(':id')

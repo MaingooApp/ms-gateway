@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { AuthSubjects, NATS_SERVICE, envs } from 'src/config';
 import { CurrentUser } from 'src/common';
-import { LoginUserDto, RefreshTokenDto, RegisterUserDto } from './dto';
+import { LoginUserDto, RefreshTokenDto, RegisterUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -30,6 +30,14 @@ export class AuthService {
     return this.send(AuthSubjects.profile, {
       userId: user.userId,
       enterpriseId: user.enterpriseId,
+    });
+  }
+
+  updateUser(userId: string, enterpriseId: string, data: UpdateUserDto) {
+    return this.send(AuthSubjects.userUpdate, {
+      userId,
+      enterpriseId,
+      data,
     });
   }
 
