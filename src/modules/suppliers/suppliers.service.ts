@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
 
 import { NATS_SERVICE, envs } from 'src/config';
-import type { CreateSupplierDto, CreateInvoiceDto } from './dto';
+import type { CreateSupplierDto, CreateInvoiceDto, ListInvoicesQuery } from './dto';
 
 const SuppliersSubjects = {
   createSupplier: 'suppliers.create',
@@ -50,8 +50,8 @@ export class SuppliersService {
     return this.send(SuppliersSubjects.getInvoice, { id });
   }
 
-  async listInvoices(enterpriseId?: string) {
-    return this.send(SuppliersSubjects.listInvoices, { enterpriseId });
+  async listInvoices(filters?: ListInvoicesQuery) {
+    return this.send(SuppliersSubjects.listInvoices, filters || {});
   }
 
   async deleteInvoice(id: string) {

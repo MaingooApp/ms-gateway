@@ -1,1155 +1,1425 @@
 {
-  "info": {
-    "_postman_id": "3ab9834a-e0ad-4c3b-81cb-5f2d8a5f063a",
-    "name": "Maingoo Gateway API",
-    "description": "Collection for Maingoo Gateway microservice endpoints",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "8656011"
-  },
-  "item": [
-    {
-      "name": "Health Check",
-      "item": [
-        {
-          "name": "Check Health",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/health",
-              "host": ["{{base_url}}"],
-              "path": ["health"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Authentication",
-      "item": [
-        {
-          "name": "Register User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    if (response.accessToken) {",
-                  "        pm.collectionVariables.set('access_token', response.accessToken);",
-                  "    }",
-                  "    if (response.refreshToken) {",
-                  "        pm.collectionVariables.set('refresh_token', response.refreshToken);",
-                  "    }",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"user@maingoo.com\",\n  \"password\": \"password123\",\n  \"name\": \"John Doe\",\n  \"roleId\": \"<get-from-roles-endpoint>\",\n  \"enterpriseId\": \"enterprise-123\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Login User",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 200 || pm.response.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    if (response.tokens.accessToken) {",
-                  "        pm.environment.set('access_token', response.tokens.accessToken);",
-                  "    }",
-                  "    if (response.tokens.refreshToken) {",
-                  "        pm.environment.set('refresh_token', response.tokens.refreshToken);",
-                  "    }",
-                  "}"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"email\": \"admin@maingoo.com\",\n  \"password\": \"password123\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Refresh Token",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 200 || pm.response.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    if (response.accessToken) {",
-                  "        pm.collectionVariables.set('access_token', response.accessToken);",
-                  "    }",
-                  "    if (response.refreshToken) {",
-                  "        pm.collectionVariables.set('refresh_token', response.refreshToken);",
-                  "    }",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/auth/refresh",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "refresh"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Roles",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/auth/roles",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "roles"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Profile",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/auth/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "profile"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Profile",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"password\": \"12345678\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/auth/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "profile"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Document Analysis",
-      "item": [
-        {
-          "name": "Submit Invoice for Analysis",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    if (response.id) {",
-                  "        pm.collectionVariables.set('document_id', response.id);",
-                  "        console.log('Document ID saved:', response.id);",
-                  "    }",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "file",
-                  "description": "Invoice image (PNG, JPG, WEBP)",
-                  "type": "file",
-                  "src": []
-                },
-                {
-                  "key": "notes",
-                  "value": "Invoice from supplier - will be auto-created in Suppliers service",
-                  "description": "Optional notes about the invoice",
-                  "type": "text"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{base_url}}/api/analyze/invoice",
-              "host": ["{{base_url}}"],
-              "path": ["api", "analyze", "invoice"]
-            },
-            "description": "Upload an invoice image for AI analysis. The system will:\n1. Extract invoice data (supplier, items, totals)\n2. Automatically create the invoice in Suppliers service\n3. Return a documentId to check status"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Document by ID",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 200) {",
-                  "    const response = pm.response.json();",
-                  "    if (response.invoiceId) {",
-                  "        pm.collectionVariables.set('invoice_id', response.invoiceId);",
-                  "        console.log('Invoice ID saved:', response.invoiceId);",
-                  "        console.log('You can now query: GET /api/suppliers/invoices/' + response.invoiceId);",
-                  "    }",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/analyze/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "analyze", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{document_id}}",
-                  "description": "Document ID from upload response"
-                }
-              ]
-            },
-            "description": "Check the analysis status and results.\n\n**Status values:**\n- PENDING: Waiting to process\n- PROCESSING: AI analyzing the invoice\n- DONE: Analysis complete (check extraction + invoiceId fields)\n- FAILED: Error occurred\n\n**Important:** When status is DONE, the response includes `invoiceId` which is the ID of the invoice created in the Suppliers service. Use this ID to query the full invoice at:\nGET /api/suppliers/invoices/{invoiceId}"
-          },
-          "response": []
-        },
-        {
-          "name": "List My Documents",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/analyze",
-              "host": ["{{base_url}}"],
-              "path": ["api", "analyze"]
-            },
-            "description": "Get all documents for the authenticated user's enterprise"
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Suppliers",
-      "item": [
-        {
-          "name": "Create Supplier",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Proveedor ABC S.A.\",\n  \"email\": \"contacto@proveedorabc.com\",\n  \"phone\": \"+34 912 345 678\",\n  \"address\": \"Calle Principal 123, Madrid, España\",\n  \"taxId\": \"B12345678\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/suppliers",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "List All Suppliers",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/suppliers",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Supplier by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "uuid-here"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Supplier",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "uuid-here",
-                  "description": "Supplier UUID to delete"
-                }
-              ]
-            },
-            "description": "Delete a supplier. Note: Cannot delete if the supplier has associated invoices. You must delete all invoices first."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Invoices",
-      "item": [
-        {
-          "name": "Create Invoice (Manual)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"enterpriseId\": \"{{enterprise_id}}\",\n  \"supplierName\": \"Proveedor XYZ S.A.\",\n  \"supplierCifNif\": \"B12345678\",\n  \"invoiceNumber\": \"INV-2025-001\",\n  \"date\": \"2025-10-12T10:00:00.000Z\",\n  \"amount\": 1250.50,\n  \"lines\": [\n    {\n      \"description\": \"Product A\",\n      \"quantity\": 10,\n      \"unitPrice\": 50.00,\n      \"tax\": \"21\"\n    },\n    {\n      \"description\": \"Product B\",\n      \"quantity\": 5,\n      \"unitPrice\": 150.10,\n      \"tax\": \"21\"\n    }\n  ]\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/invoices",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", "invoices"]
-            },
-            "description": "Manually create an invoice. NOTE: Invoices are normally created automatically when you upload an invoice image to the Document Analysis endpoint."
-          },
-          "response": []
-        },
-        {
-          "name": "List All Invoices (My Enterprise)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/invoices",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", "invoices"]
-            },
-            "description": "Get all invoices for your enterprise. These include:\n- Auto-created invoices from document analysis\n- Manually created invoices\n\nFiltered automatically by your enterpriseId from the JWT token."
-          },
-          "response": []
-        },
-        {
-          "name": "List Invoices by Restaurant (Filter)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/invoices?restaurantId=uuid-restaurant-id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", "invoices"],
-              "query": [
-                {
-                  "key": "restaurantId",
-                  "value": "uuid-restaurant-id",
-                  "description": "Optional filter by specific restaurant"
-                }
-              ]
-            },
-            "description": "Filter invoices by a specific restaurant ID (optional query parameter)"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Invoice by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/invoices/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", "invoices", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{invoice_id}}",
-                  "description": "Invoice ID (auto-saved from document analysis)"
-                }
-              ]
-            },
-            "description": "Get a specific invoice by its ID.\n\n**How to use:**\n1. Upload invoice image → Get documentId\n2. Check document status → Get invoiceId (when DONE)\n3. Use this endpoint with the invoiceId to get full invoice details\n\n**Note:** The invoiceId is automatically saved when you check document status."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Invoice Document URL",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/invoices/:id/document-url?expiresInHours=24",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", "invoices", ":id", "document-url"],
-              "query": [
-                {
-                  "key": "expiresInHours",
-                  "value": "24",
-                  "description": "Hours until the URL expires (default: 24)"
-                }
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{invoice_id}}",
-                  "description": "Invoice ID"
-                }
-              ]
-            },
-            "description": "Get a temporary URL to download the original invoice document from Azure Blob Storage.\n\n**Response includes:**\n- `url`: Temporary download URL (valid for specified hours)\n- `expiresIn`: Number of hours until URL expires\n- `blobName`: Reference to the file in blob storage\n\n**Use case:** Display or download the original invoice PDF/image uploaded by the user."
-          },
-          "response": []
-        },
-        {
-          "name": "Get Multiple Invoice Document URLs",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"invoiceIds\": [\n    \"{{invoice_id}}\",\n    \"cm3a2b3c4d5e6f7g8h9i0k\",\n    \"cm3a2b3c4d5e6f7g8h9i0l\"\n  ],\n  \"expiresInHours\": 48\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/invoices/document-urls",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", "invoices", "document-urls"]
-            },
-            "description": "Get temporary URLs for multiple invoice documents at once.\n\n**Use case:** Bulk export of invoices - generate download links for multiple invoices in one request.\n\n**Response:** Array of objects with:\n- `invoiceId`: The invoice ID\n- `blobName`: Reference to the file\n- `url`: Temporary download URL\n- `expiresIn`: Hours until expiration"
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Invoice",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/suppliers/invoices/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "suppliers", "invoices", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{invoice_id}}",
-                  "description": "Invoice UUID to delete"
-                }
-              ]
-            },
-            "description": "Delete an invoice and its associated document from Azure Blob Storage.\n\n**Note:** This will permanently remove:\n- The invoice record from the database\n- The original document file from blob storage\n\n**Warning:** This action cannot be undone."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Enterprises",
-      "item": [
-        {
-          "name": "Create Enterprise",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"type\": \"RESTAURANT\",\n  \"name\": \"Restaurante El Buen Sabor\",\n  \"cifNif\": \"B12345678\",\n  \"email\": \"contacto@elbuensabor.com\",\n  \"country\": \"España\",\n  \"city\": \"Madrid\",\n  \"address\": \"Calle Mayor 123\",\n  \"postalCode\": \"28013\",\n  \"firstPhonePrefix\": \"+34\",\n  \"firstPhoneNumber\": \"912345678\",\n  \"secondPhonePrefix\": \"+34\",\n  \"secondPhoneNumber\": \"678901234\",\n  \"iban\": \"ES9121000418450200051332\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/enterprises",
-              "host": ["{{base_url}}"],
-              "path": ["api", "enterprises"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "List Enterprises",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/enterprises",
-              "host": ["{{base_url}}"],
-              "path": ["api", "enterprises"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get Enterprise by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/enterprises/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "enterprises", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "uuid-here"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Enterprise",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Restaurante El Buen Sabor - Actualizado\",\n  \"city\": \"Barcelona\",\n  \"postalCode\": \"08001\",\n  \"firstPhoneNumber\": \"932345678\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/enterprises/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "enterprises", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "uuid-here"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Enterprise",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/enterprises/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "enterprises", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "uuid-here"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Products",
-      "item": [
-        {
-          "name": "Create Product",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    if (response.id) {",
-                  "        pm.collectionVariables.set('product_id', response.id);",
-                  "        console.log('Product ID saved:', response.id);",
-                  "    }",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Aceite de Oliva Virgen Extra\",\n  \"eanCode\": \"8412345678901\",\n  \"categoryId\": \"{{category_id}}\",\n  \"unit\": \"Litro\",\n  \"allergenIds\": []\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/products",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products"]
-            },
-            "description": "Create a new product in the catalog. You must provide:\n- name: Product name\n- eanCode: EAN barcode (optional)\n- categoryId: Category UUID (get from categories endpoint)\n- unit: Unit of measure (e.g., Kg, Litro, Unidad)\n- allergenIds: Array of allergen UUIDs (optional)"
-          },
-          "response": []
-        },
-        {
-          "name": "List All Products",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products"]
-            },
-            "description": "Get all products in the catalog"
-          },
-          "response": []
-        },
-        {
-          "name": "Search Products",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products?search=aceite&categoryId={{category_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products"],
-              "query": [
-                {
-                  "key": "search",
-                  "value": "aceite",
-                  "description": "Search by product name or EAN code"
-                },
-                {
-                  "key": "categoryId",
-                  "value": "{{category_id}}",
-                  "description": "Filter by category UUID"
-                }
-              ]
-            },
-            "description": "Search and filter products:\n- search: Search by name or EAN code\n- categoryId: Filter by category"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Product by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{product_id}}",
-                  "description": "Product UUID"
-                }
-              ]
-            },
-            "description": "Get a specific product by its ID with full details including category and allergens"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Product",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Aceite de Oliva Virgen Extra Premium\",\n  \"unit\": \"Botella 1L\",\n  \"allergenIds\": []\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/products/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{product_id}}",
-                  "description": "Product UUID"
-                }
-              ]
-            },
-            "description": "Update product details. All fields are optional."
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Product",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{product_id}}",
-                  "description": "Product UUID"
-                }
-              ]
-            },
-            "description": "Delete a product from the catalog"
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Categories",
-      "item": [
-        {
-          "name": "Create Category",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    if (response.id) {",
-                  "        pm.collectionVariables.set('category_id', response.id);",
-                  "        console.log('Category ID saved:', response.id);",
-                  "    }",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Aceites y Vinagres\",\n  \"description\": \"Aceites de oliva, girasol, vinagres balsámicos, etc.\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/products/categories",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "categories"]
-            },
-            "description": "Create a new product category"
-          },
-          "response": []
-        },
-        {
-          "name": "List All Categories",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products/categories",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "categories"]
-            },
-            "description": "Get all product categories. Default categories include:\n- Frutas y Verduras\n- Carnes y Embutidos\n- Pescados y Mariscos\n- Lácteos y Huevos\n- Panadería y Bollería\n- Congelados\n- Bebidas\n- Otros"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Category by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products/categories/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "categories", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{category_id}}",
-                  "description": "Category UUID"
-                }
-              ]
-            },
-            "description": "Get a specific category by its ID"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Category",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Aceites, Vinagres y Condimentos\",\n  \"description\": \"Aceites de oliva, girasol, vinagres balsámicos, especias y condimentos\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/products/categories/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "categories", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{category_id}}",
-                  "description": "Category UUID"
-                }
-              ]
-            },
-            "description": "Update category details. All fields are optional."
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Category",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products/categories/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "categories", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{category_id}}",
-                  "description": "Category UUID"
-                }
-              ]
-            },
-            "description": "Delete a category. Note: Cannot delete if products are assigned to this category."
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Allergens",
-      "item": [
-        {
-          "name": "Create Allergen",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "if (pm.response.code === 201) {",
-                  "    const response = pm.response.json();",
-                  "    if (response.id) {",
-                  "        pm.collectionVariables.set('allergen_id', response.id);",
-                  "        console.log('Allergen ID saved:', response.id);",
-                  "    }",
-                  "}"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Soja\",\n  \"code\": \"SOYA\",\n  \"description\": \"Contiene soja o derivados de soja\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/products/allergens",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "allergens"]
-            },
-            "description": "Create a new allergen"
-          },
-          "response": []
-        },
-        {
-          "name": "List All Allergens",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products/allergens",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "allergens"]
-            },
-            "description": "Get all allergens. Default allergens include the 14 European allergens:\n- Gluten (GLUTEN)\n- Crustáceos (CRUSTACEANS)\n- Huevos (EGGS)\n- Pescado (FISH)\n- Cacahuetes (PEANUTS)\n- Soja (SOYA)\n- Lácteos (MILK)\n- Frutos de cáscara (NUTS)\n- Apio (CELERY)\n- Mostaza (MUSTARD)\n- Sésamo (SESAME)\n- Dióxido de azufre y sulfitos (SULPHITES)\n- Altramuces (LUPIN)\n- Moluscos (MOLLUSCS)"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Allergen by ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products/allergens/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "allergens", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{allergen_id}}",
-                  "description": "Allergen UUID"
-                }
-              ]
-            },
-            "description": "Get a specific allergen by its ID"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Allergen",
-          "request": {
-            "method": "PATCH",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"description\": \"Contiene soja o derivados de soja. Puede causar reacciones alérgicas graves.\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/products/allergens/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "allergens", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{allergen_id}}",
-                  "description": "Allergen UUID"
-                }
-              ]
-            },
-            "description": "Update allergen details. All fields are optional."
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Allergen",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/products/allergens/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "products", "allergens", ":id"],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "{{allergen_id}}",
-                  "description": "Allergen UUID"
-                }
-              ]
-            },
-            "description": "Delete an allergen"
-          },
-          "response": []
-        }
-      ]
-    }
-  ],
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{access_token}}",
-        "type": "string"
-      }
-    ]
-  },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "http://localhost:3000",
-      "type": "string"
-    },
-    {
-      "key": "access_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "refresh_token",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "document_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "invoice_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "enterprise_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "product_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "category_id",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "allergen_id",
-      "value": "",
-      "type": "string"
-    }
-  ]
+	"info": {
+		"_postman_id": "ce18de20-f359-4a52-9279-1d3c8373ae24",
+		"name": "Maingoo Gateway API",
+		"description": "Collection for Maingoo Gateway microservice endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8656011"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Check Health",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.accessToken) {",
+									"        pm.collectionVariables.set('access_token', response.accessToken);",
+									"    }",
+									"    if (response.refreshToken) {",
+									"        pm.collectionVariables.set('refresh_token', response.refreshToken);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@maingoo.com\",\n  \"password\": \"password123\",\n  \"name\": \"John Doe\",\n  \"roleId\": \"cmj7npyow0001o76lrjmb9jru\",\n  \"enterpriseId\": \"enterprise-123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.tokens.accessToken) {",
+									"        pm.environment.set('access_token', response.tokens.accessToken);",
+									"    }",
+									"    if (response.tokens.refreshToken) {",
+									"        pm.environment.set('refresh_token', response.tokens.refreshToken);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@maingoo.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.accessToken) {",
+									"        pm.collectionVariables.set('access_token', response.accessToken);",
+									"    }",
+									"    if (response.refreshToken) {",
+									"        pm.collectionVariables.set('refresh_token', response.refreshToken);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Roles",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/roles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/auth/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"12345678\",\n    \"currentPassword\": \"password123\",\n    \"email\": \"demo@demo.com\",\n    \"name\": \"Demo\",\n    \"phoneNumber\": \"666666666\",\n    \"phonePrefix\": \"+34\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/profile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Document Analysis",
+			"item": [
+				{
+					"name": "Submit Invoice for Analysis",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.id) {",
+									"        pm.collectionVariables.set('document_id', response.id);",
+									"        console.log('Document ID saved:', response.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"description": "Invoice image (PNG, JPG, WEBP)",
+									"type": "file",
+									"src": "/Users/david/Downloads/Tudis 9 de Julio_compressed (1).pdf"
+								},
+								{
+									"key": "documentType",
+									"value": "invoice",
+									"description": "Optional notes about the invoice",
+									"type": "text"
+								},
+								{
+									"key": "hasDeliveryNotes",
+									"value": "false",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/analyze/invoice",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"analyze",
+								"invoice"
+							]
+						},
+						"description": "Upload an invoice image for AI analysis. The system will:\n1. Extract invoice data (supplier, items, totals)\n2. Automatically create the invoice in Suppliers service\n3. Return a documentId to check status"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Document by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    if (response.invoiceId) {",
+									"        pm.collectionVariables.set('invoice_id', response.invoiceId);",
+									"        console.log('Invoice ID saved:', response.invoiceId);",
+									"        console.log('You can now query: GET /api/suppliers/invoices/' + response.invoiceId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analyze/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"analyze",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{document_id}}",
+									"description": "Document ID from upload response"
+								}
+							]
+						},
+						"description": "Check the analysis status and results.\n\n**Status values:**\n- PENDING: Waiting to process\n- PROCESSING: AI analyzing the invoice\n- DONE: Analysis complete (check extraction + invoiceId fields)\n- FAILED: Error occurred\n\n**Important:** When status is DONE, the response includes `invoiceId` which is the ID of the invoice created in the Suppliers service. Use this ID to query the full invoice at:\nGET /api/suppliers/invoices/{invoiceId}"
+					},
+					"response": []
+				},
+				{
+					"name": "List My Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analyze",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"analyze"
+							]
+						},
+						"description": "Get all documents for the authenticated user's enterprise"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Suppliers",
+			"item": [
+				{
+					"name": "Create Supplier",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Proveedor ABC S.A.\",\n  \"email\": \"contacto@proveedorabc.com\",\n  \"phone\": \"+34 912 345 678\",\n  \"address\": \"Calle Principal 123, Madrid, España\",\n  \"taxId\": \"B12345678\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/suppliers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Suppliers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Supplier by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Supplier",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here",
+									"description": "Supplier UUID to delete"
+								}
+							]
+						},
+						"description": "Delete a supplier. Note: Cannot delete if the supplier has associated invoices. You must delete all invoices first."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invoices",
+			"item": [
+				{
+					"name": "Create Invoice (Manual)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"enterpriseId\": \"{{enterprise_id}}\",\n  \"supplierName\": \"Proveedor XYZ S.A.\",\n  \"supplierCifNif\": \"B12345678\",\n  \"invoiceNumber\": \"INV-2025-001\",\n  \"date\": \"2025-10-12T10:00:00.000Z\",\n  \"amount\": 1250.50,\n  \"lines\": [\n    {\n      \"description\": \"Product A\",\n      \"quantity\": 10,\n      \"unitPrice\": 50.00,\n      \"tax\": \"21\"\n    },\n    {\n      \"description\": \"Product B\",\n      \"quantity\": 5,\n      \"unitPrice\": 150.10,\n      \"tax\": \"21\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/invoices",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								"invoices"
+							]
+						},
+						"description": "Manually create an invoice. NOTE: Invoices are normally created automatically when you upload an invoice image to the Document Analysis endpoint."
+					},
+					"response": []
+				},
+				{
+					"name": "List All Invoices (My Enterprise)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/invoices/?supplierId=cmjdeo63a001knoigv61ce77h&productId=cmjdenp640005mt4v0ixxnxdu",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								"invoices",
+								""
+							],
+							"query": [
+								{
+									"key": "supplierId",
+									"value": "cmjdeo63a001knoigv61ce77h"
+								},
+								{
+									"key": "productId",
+									"value": "cmjdenp640005mt4v0ixxnxdu"
+								}
+							]
+						},
+						"description": "Get all invoices for your enterprise. These include:\n- Auto-created invoices from document analysis\n- Manually created invoices\n\nFiltered automatically by your enterpriseId from the JWT token."
+					},
+					"response": []
+				},
+				{
+					"name": "List Invoices by Restaurant (Filter)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/invoices?restaurantId=uuid-restaurant-id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								"invoices"
+							],
+							"query": [
+								{
+									"key": "restaurantId",
+									"value": "uuid-restaurant-id",
+									"description": "Optional filter by specific restaurant"
+								}
+							]
+						},
+						"description": "Filter invoices by a specific restaurant ID (optional query parameter)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Invoice by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/invoices/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								"invoices",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{invoice_id}}",
+									"description": "Invoice ID (auto-saved from document analysis)"
+								}
+							]
+						},
+						"description": "Get a specific invoice by its ID.\n\n**How to use:**\n1. Upload invoice image → Get documentId\n2. Check document status → Get invoiceId (when DONE)\n3. Use this endpoint with the invoiceId to get full invoice details\n\n**Note:** The invoiceId is automatically saved when you check document status."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Invoice Document URL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/invoices/:id/document-url?expiresInHours=24",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								"invoices",
+								":id",
+								"document-url"
+							],
+							"query": [
+								{
+									"key": "expiresInHours",
+									"value": "24",
+									"description": "Hours until the URL expires (default: 24)"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{invoice_id}}",
+									"description": "Invoice ID"
+								}
+							]
+						},
+						"description": "Get a temporary URL to download the original invoice document from Azure Blob Storage.\n\n**Response includes:**\n- `url`: Temporary download URL (valid for specified hours)\n- `expiresIn`: Number of hours until URL expires\n- `blobName`: Reference to the file in blob storage\n\n**Use case:** Display or download the original invoice PDF/image uploaded by the user."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Multiple Invoice Document URLs",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"invoiceIds\": [\n    \"{{invoice_id}}\",\n    \"cm3a2b3c4d5e6f7g8h9i0k\",\n    \"cm3a2b3c4d5e6f7g8h9i0l\"\n  ],\n  \"expiresInHours\": 48\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/invoices/document-urls",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								"invoices",
+								"document-urls"
+							]
+						},
+						"description": "Get temporary URLs for multiple invoice documents at once.\n\n**Use case:** Bulk export of invoices - generate download links for multiple invoices in one request.\n\n**Response:** Array of objects with:\n- `invoiceId`: The invoice ID\n- `blobName`: Reference to the file\n- `url`: Temporary download URL\n- `expiresIn`: Hours until expiration"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Invoice",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/invoices/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								"invoices",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{invoice_id}}",
+									"description": "Invoice UUID to delete"
+								}
+							]
+						},
+						"description": "Delete an invoice and its associated document from Azure Blob Storage.\n\n**Note:** This will permanently remove:\n- The invoice record from the database\n- The original document file from blob storage\n\n**Warning:** This action cannot be undone."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Enterprises",
+			"item": [
+				{
+					"name": "Create Enterprise",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"RESTAURANT\",\n  \"name\": \"Restaurante El Buen Sabor\",\n  \"cifNif\": \"B12345678\",\n  \"email\": \"contacto@elbuensabor.com\",\n  \"country\": \"España\",\n  \"city\": \"Madrid\",\n  \"address\": \"Calle Mayor 123\",\n  \"postalCode\": \"28013\",\n  \"firstPhonePrefix\": \"+34\",\n  \"firstPhoneNumber\": \"912345678\",\n  \"secondPhonePrefix\": \"+34\",\n  \"secondPhoneNumber\": \"678901234\",\n  \"iban\": \"ES9121000418450200051332\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/enterprises",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"enterprises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Enterprises",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/enterprises",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"enterprises"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Enterprise by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/enterprises/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"enterprises",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Enterprise",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Restaurante El Buen Sabor - Actualizado\",\n  \"city\": \"Barcelona\",\n  \"postalCode\": \"08001\",\n  \"firstPhoneNumber\": \"932345678\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/enterprises/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"enterprises",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Enterprise",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/enterprises/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"enterprises",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "uuid-here"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Create Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.id) {",
+									"        pm.collectionVariables.set('product_id', response.id);",
+									"        console.log('Product ID saved:', response.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Aceite de Oliva Virgen Extra\",\n  \"eanCode\": \"8412345678901\",\n  \"categoryId\": \"{{category_id}}\",\n  \"unit\": \"Litro\",\n  \"allergenIds\": []\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"description": "Create a new product in the catalog. You must provide:\n- name: Product name\n- eanCode: EAN barcode (optional)\n- categoryId: Category UUID (get from categories endpoint)\n- unit: Unit of measure (e.g., Kg, Litro, Unidad)\n- allergenIds: Array of allergen UUIDs (optional)"
+					},
+					"response": []
+				},
+				{
+					"name": "List All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"description": "Get all products in the catalog"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products?search=aceite&categoryId={{category_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "aceite",
+									"description": "Search by product name or EAN code"
+								},
+								{
+									"key": "categoryId",
+									"value": "{{category_id}}",
+									"description": "Filter by category UUID"
+								}
+							]
+						},
+						"description": "Search and filter products:\n- search: Search by name or EAN code\n- categoryId: Filter by category"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{product_id}}",
+									"description": "Product UUID"
+								}
+							]
+						},
+						"description": "Get a specific product by its ID with full details including category and allergens"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Aceite de Oliva Virgen Extra Premium\",\n  \"unit\": \"Botella 1L\",\n  \"allergenIds\": []\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{product_id}}",
+									"description": "Product UUID"
+								}
+							]
+						},
+						"description": "Update product details. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{product_id}}",
+									"description": "Product UUID"
+								}
+							]
+						},
+						"description": "Delete a product from the catalog"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Create Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.id) {",
+									"        pm.collectionVariables.set('category_id', response.id);",
+									"        console.log('Category ID saved:', response.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Aceites y Vinagres\",\n  \"description\": \"Aceites de oliva, girasol, vinagres balsámicos, etc.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"categories"
+							]
+						},
+						"description": "Create a new product category"
+					},
+					"response": []
+				},
+				{
+					"name": "List All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/categories",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"categories"
+							]
+						},
+						"description": "Get all product categories. Default categories include:\n- Frutas y Verduras\n- Carnes y Embutidos\n- Pescados y Mariscos\n- Lácteos y Huevos\n- Panadería y Bollería\n- Congelados\n- Bebidas\n- Otros"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/categories/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"categories",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{category_id}}",
+									"description": "Category UUID"
+								}
+							]
+						},
+						"description": "Get a specific category by its ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Aceites, Vinagres y Condimentos\",\n  \"description\": \"Aceites de oliva, girasol, vinagres balsámicos, especias y condimentos\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/categories/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"categories",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{category_id}}",
+									"description": "Category UUID"
+								}
+							]
+						},
+						"description": "Update category details. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/categories/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"categories",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{category_id}}",
+									"description": "Category UUID"
+								}
+							]
+						},
+						"description": "Delete a category. Note: Cannot delete if products are assigned to this category."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Allergens",
+			"item": [
+				{
+					"name": "Create Allergen",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.id) {",
+									"        pm.collectionVariables.set('allergen_id', response.id);",
+									"        console.log('Allergen ID saved:', response.id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Soja\",\n  \"code\": \"SOYA\",\n  \"description\": \"Contiene soja o derivados de soja\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/allergens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"allergens"
+							]
+						},
+						"description": "Create a new allergen"
+					},
+					"response": []
+				},
+				{
+					"name": "List All Allergens",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/allergens",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"allergens"
+							]
+						},
+						"description": "Get all allergens. Default allergens include the 14 European allergens:\n- Gluten (GLUTEN)\n- Crustáceos (CRUSTACEANS)\n- Huevos (EGGS)\n- Pescado (FISH)\n- Cacahuetes (PEANUTS)\n- Soja (SOYA)\n- Lácteos (MILK)\n- Frutos de cáscara (NUTS)\n- Apio (CELERY)\n- Mostaza (MUSTARD)\n- Sésamo (SESAME)\n- Dióxido de azufre y sulfitos (SULPHITES)\n- Altramuces (LUPIN)\n- Moluscos (MOLLUSCS)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Allergen by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/allergens/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"allergens",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{allergen_id}}",
+									"description": "Allergen UUID"
+								}
+							]
+						},
+						"description": "Get a specific allergen by its ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Allergen",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"description\": \"Contiene soja o derivados de soja. Puede causar reacciones alérgicas graves.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/products/allergens/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"allergens",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{allergen_id}}",
+									"description": "Allergen UUID"
+								}
+							]
+						},
+						"description": "Update allergen details. All fields are optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Allergen",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/products/allergens/:id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"allergens",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{allergen_id}}",
+									"description": "Allergen UUID"
+								}
+							]
+						},
+						"description": "Delete an allergen"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "document_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "invoice_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "enterprise_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "product_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "category_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "allergen_id",
+			"value": "",
+			"type": "string"
+		}
+	]
 }

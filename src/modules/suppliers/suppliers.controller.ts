@@ -3,7 +3,14 @@ import { Controller, Get, Post, Delete, Body, Param, UseGuards, Query } from '@n
 import { SuppliersService } from './suppliers.service';
 import { AuthGuard } from 'src/common/guards';
 import { User } from 'src/common/decorators';
-import { CreateSupplierDto, CreateInvoiceDto, GetSupplierParams, GetInvoiceParams } from './dto';
+import type { CurrentUser } from 'src/common';
+import {
+  CreateSupplierDto,
+  CreateInvoiceDto,
+  GetSupplierParams,
+  GetInvoiceParams,
+  ListInvoicesQuery,
+} from './dto';
 
 @Controller('suppliers')
 @UseGuards(AuthGuard)
@@ -12,25 +19,29 @@ export class SuppliersController {
 
   // ==================== Suppliers ====================
   @Post()
-  createSupplier(@Body() dto: CreateSupplierDto, @User() user: any) {
+  createSupplier(@Body() dto: CreateSupplierDto, @User() user: CurrentUser) {
     return this.suppliersService.createSupplier(dto, user.enterpriseId);
   }
 
   @Get()
-  listSuppliers(@User() user: any) {
+  listSuppliers(@User() user: CurrentUser) {
     return this.suppliersService.listSuppliers(user.enterpriseId);
   }
 
   // ==================== Invoices ====================
   // IMPORTANTE: Las rutas específicas deben ir ANTES de las rutas con parámetros
   @Post('invoices')
-  createInvoice(@Body() dto: CreateInvoiceDto, @User() user: any) {
+  createInvoice(@Body() dto: CreateInvoiceDto, @User() user: CurrentUser) {
     return this.suppliersService.createInvoice(dto, user.enterpriseId);
   }
 
   @Get('invoices')
-  listInvoices(@User() user: any) {
-    return this.suppliersService.listInvoices(user.enterpriseId);
+  listInvoices(@User() user: CurrentUser, @Query() query: ListInvoicesQuery) {
+    return this.suppliersService.listInvoices({
+      enterpriseId: user.enterpriseId,
+      supplierId: query.supplierId,
+      productId: query.productId,
+    });
   }
 
   @Post('invoices/document-urls')
@@ -60,7 +71,6 @@ export class SuppliersController {
     return this.suppliersService.deleteInvoice(params.id);
   }
 
-  // Esta ruta debe ir al FINAL porque captura cualquier string como :id
   @Get(':id')
   getSupplier(@Param() params: GetSupplierParams) {
     return this.suppliersService.getSupplierById(params.id);
