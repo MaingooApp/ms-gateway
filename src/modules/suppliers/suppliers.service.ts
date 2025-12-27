@@ -18,6 +18,7 @@ const SuppliersSubjects = {
   deleteInvoice: 'invoices.delete',
   getInvoiceDocumentUrl: 'invoices.getDocumentUrl',
   getMultipleInvoiceDocumentUrls: 'invoices.getMultipleDocumentUrls',
+  getProductPriceHistory: 'invoices.getProductPriceHistory',
 } as const;
 
 @Injectable()
@@ -70,6 +71,10 @@ export class SuppliersService {
       invoiceIds,
       expiresInHours: expiresInHours || 48,
     });
+  }
+
+  async getProductPriceHistory(productId: string, enterpriseId: string) {
+    return this.send(SuppliersSubjects.getProductPriceHistory, { productId, enterpriseId });
   }
 
   private async send<T>(subject: string, payload: unknown): Promise<T> {
