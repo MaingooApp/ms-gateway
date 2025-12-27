@@ -44,6 +44,11 @@ export class SuppliersController {
     });
   }
 
+  @Get('products/:productId/price-history')
+  getProductPriceHistory(@Param('productId') productId: string, @User() user: CurrentUser) {
+    return this.suppliersService.getProductPriceHistory(productId, user.enterpriseId);
+  }
+
   @Post('invoices/document-urls')
   getMultipleInvoiceDocumentUrls(@Body() body: { invoiceIds: string[]; expiresInHours?: number }) {
     return this.suppliersService.getMultipleInvoiceDocumentUrls(

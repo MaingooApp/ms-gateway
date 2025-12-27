@@ -709,6 +709,35 @@
 						"description": "Delete an invoice and its associated document from Azure Blob Storage.\n\n**Note:** This will permanently remove:\n- The invoice record from the database\n- The original document file from blob storage\n\n**Warning:** This action cannot be undone."
 					},
 					"response": []
+				},
+				{
+					"name": "Get Product Price History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/suppliers/products/:productId/price-history",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"suppliers",
+								"products",
+								":productId",
+								"price-history"
+							],
+							"variable": [
+								{
+									"key": "productId",
+									"value": "cmjdenp640005mt4v0ixxnxdu",
+									"description": "Product UUID to get price history for"
+								}
+							]
+						},
+						"description": "Get the complete price history of a product across all invoices.\n\n**Returns:** Array of price entries ordered by date (most recent first), each containing:\n- `price`: Unit price of the product\n- `invoiceId`: UUID of the invoice\n- `invoiceNumber`: Invoice number for reference\n- `date`: Invoice date (ISO 8601)\n- `quantity`: Quantity purchased\n- `lineTotal`: Total amount for that line (price × quantity)\n\n**Use cases:**\n- Track price variations over time\n- Compare prices from different purchase dates\n- Analyze purchasing patterns\n- Identify best pricing periods"
+					},
+					"response": []
 				}
 			]
 		},
